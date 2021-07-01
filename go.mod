@@ -1,4 +1,4 @@
-module whitedew
+module github.com/m1dsummer/whitedew
 
 go 1.15
 
