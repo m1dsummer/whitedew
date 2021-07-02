@@ -18,7 +18,6 @@ func (h HandlerFunc) Handle(s *Session) {
 	h(s)
 }
 
-
 type Server struct {
 	engine *gin.Engine
 }

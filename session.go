@@ -5,21 +5,14 @@ import (
 	"time"
 )
 
-type ArgParser func(s *Session)
-
-func (a ArgParser) Parse(s *Session) {
-	a(s)
-}
-
 type Session struct {
 	Manager    *SessionManager
 	Sender     Sender
 	StartTime  time.Time
 	Message    Message
-	Env        map[string]interface{}
+	Env      	  map[string]interface{}
 	IsFirstRun bool
 	Action     string
-	ArgParser  ArgParser
 	Agent      *Agent
 }
 
@@ -40,10 +33,6 @@ func (s Session) Get(arg string, prompt string) interface{} {
 		s.Agent.PostGroupMessage(s.Sender.GetId(), prompt)
 	}
 	return s.Env[arg]
-}
-
-func (s *Session) RegisterArgParser(parser ArgParser) {
-	s.ArgParser = parser
 }
 
 type SessionManager struct {
