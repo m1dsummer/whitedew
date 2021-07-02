@@ -16,7 +16,6 @@ type Session struct {
 	Sender     Sender
 	StartTime  time.Time
 	Message    Message
-	Words      []string
 	Env        map[string]interface{}
 	IsFirstRun bool
 	Action     string
@@ -74,7 +73,6 @@ func (s SessionManager) NewSession(url string, msg Message) *Session {
 	session.Agent = NewAgent(url)
 	session.Sender = msg.GetSender()
 	session.Action = ParseAction(msg.GetContent())
-
 
 	return &session
 }

@@ -82,7 +82,7 @@ func (m metaMessage) GetSelfId() int64 {
 	return m.SelfId
 }
 
-func (m metaMessage)GetRowMessage() string {
+func (m metaMessage) GetRowMessage() string {
 	return m.RawMessage
 }
 
@@ -92,7 +92,6 @@ func (m metaMessage)GetRowMessage() string {
 type PrivateMessage struct {
 	metaMessage                  // inherit from MetaMessage
 	Sender      PrivateMsgSender `json:"sender"`
-	GroupId     int64            `json:"group_id"`
 	Anonymous   AnonymousUser    `json:"anonymous"`
 }
 
@@ -117,16 +116,16 @@ func (g GroupMessage) GetSender() Sender {
 
 type MessageLink struct {
 	Title string `json:"title"`
-	URL string `json:"url"`
+	URL   string `json:"url"`
 }
 
 type MessageInfo struct {
 	IsAtMessage bool
-	At int64
-	Images string
-	Video string
-	Voice string
-	Faces []string
-	Shares []MessageLink
-	Musics []MessageLink
+	At          int64
+	Images      string
+	Video       string
+	Voice       string
+	Faces       []string
+	Shares      []MessageLink
+	Musics      []MessageLink
 }
