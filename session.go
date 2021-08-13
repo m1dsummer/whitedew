@@ -10,7 +10,7 @@ type Session struct {
 	Sender     Sender
 	StartTime  time.Time
 	Message    Message
-	Env      	  map[string]interface{}
+	Env        map[string]interface{}
 	IsFirstRun bool
 	Action     string
 	Agent      *Agent
@@ -47,7 +47,7 @@ func (s SessionManager) Destroy(uid int64) {
 	delete(s.Pool, uid)
 }
 
-func (s SessionManager) NewSession(url string, msg Message) *Session {
+func (s SessionManager) NewSession(url string, accessToken string, msg Message) *Session {
 	oldSession := s.Get(msg.GetSender().GetId())
 	if oldSession != nil {
 		oldSession.IsFirstRun = false
@@ -59,7 +59,7 @@ func (s SessionManager) NewSession(url string, msg Message) *Session {
 	session.Message = msg
 	session.IsFirstRun = true
 	session.Env = make(map[string]interface{})
-	session.Agent = NewAgent(url)
+	session.Agent = NewAgent(url, accessToken)
 	session.Sender = msg.GetSender()
 	session.Action = ParseAction(msg.GetContent())
 

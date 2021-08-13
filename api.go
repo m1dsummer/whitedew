@@ -3,16 +3,18 @@ package whitedew
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/parnurzeal/gorequest"
 	"log"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 type Agent struct {
-	URL string
+	URL         string
+	AccessToken string
 }
 
-func NewAgent(URL string) *Agent {
-	return &Agent{URL: URL}
+func NewAgent(URL string, accessToken string) *Agent {
+	return &Agent{URL: URL, AccessToken: accessToken}
 }
 
 type MessageTemplate struct {
@@ -37,7 +39,13 @@ func (a *Agent) PostMessage(action string, param map[string]interface{}, autoEsc
 	}
 	uri := fmt.Sprintf("%s/%s", a.URL, action)
 	data, _ := json.Marshal(param)
-	_, body, errs := gorequest.New().Post(uri).Set("Content-Type", "application/json").Send(string(data)).EndBytes()
+	_, body, errs := gorequest.
+		New().
+		Post(uri).
+		Set("Content-Type", "application/json").
+		Set("Authorization", a.AccessToken).
+		Send(string(data)).
+		EndBytes()
 	if errs != nil {
 		log.Fatalln(errs)
 	}

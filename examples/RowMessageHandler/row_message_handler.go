@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/m1dsummer/whitedew"
 	"strings"
+
+	"github.com/m1dsummer/whitedew"
 )
 
-type Plugin struct {}
+type Plugin struct{}
 
-func (p Plugin)Init(w *whitedew.WhiteDew) {
+func (p Plugin) Init(w *whitedew.WhiteDew) {
 	w.SetRowMsgHandler(Handler)
 }
 
@@ -28,7 +29,7 @@ func Handler(session *whitedew.Session) {
 
 func main() {
 	w := whitedew.New()
-	w.SetCQServer("http://localhost:60001")
+	w.SetCQServer("http://localhost:60001", "access-key")
 	w.AddPlugin(Plugin{})
 	w.Run("/event", 60000)
 }

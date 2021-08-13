@@ -35,9 +35,10 @@ func NewServer() *Server {
 }
 
 type Config struct {
-	CQHost   string
-	Secret   string
-	CacheDir string
+	CQHost        string
+	Secret        string
+	CQAccessToken string
+	CacheDir      string
 }
 
 type WhiteDew struct {
@@ -59,8 +60,9 @@ func New() *WhiteDew {
 	return &w
 }
 
-func (w *WhiteDew) SetCQServer(url string) {
+func (w *WhiteDew) SetCQServer(url string, accessToken string) {
 	w.Config.CQHost = url
+	w.Config.CQAccessToken = accessToken
 }
 
 func (w *WhiteDew) SetAuth(secret string) {
@@ -117,7 +119,7 @@ func (w *WhiteDew) universalEventHandler(msgStr []byte) {
 	handlers := w.eventPool[noticeType]
 	if handlers != nil {
 		for _, handler := range handlers {
-			agent := NewAgent(w.Config.CQHost)
+			agent := NewAgent(w.Config.CQHost, w.Config.CQAccessToken)
 			handler.Handle(agent, rowEvent.(Event))
 		}
 	}
@@ -141,7 +143,7 @@ func (w *WhiteDew) dispatchEvent(msgStr []byte) {
 	var session *Session
 	switch postType {
 	case "message":
-		session = w.sessionManager.NewSession(w.Config.CQHost, msg)
+		session = w.sessionManager.NewSession(w.Config.CQHost, w.Config.CQAccessToken, msg)
 		w.messageEventHandler(msgStr, session)
 	case "notice", "request":
 		w.universalEventHandler(msgStr)
@@ -182,7 +184,6 @@ func (w *WhiteDew) eventHandler(c *gin.Context) {
 		}
 	}
 
-	log.Println(jsonData)
 	go w.dispatchEvent(jsonData)
 }
 

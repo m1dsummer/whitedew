@@ -4,9 +4,9 @@ import (
 	"github.com/m1dsummer/whitedew"
 )
 
-type PluginPing struct {}
+type PluginPing struct{}
 
-func (p PluginPing)Init(w *whitedew.WhiteDew) {
+func (p PluginPing) Init(w *whitedew.WhiteDew) {
 	w.SetActionHandler("/ping", Callback)
 }
 
@@ -16,7 +16,7 @@ func Callback(session *whitedew.Session) {
 
 func main() {
 	w := whitedew.New()
-	w.SetCQServer("http://localhost:60001")
+	w.SetCQServer("http://localhost:60001", "access-key")
 	w.AddPlugin(PluginPing{})
 	w.Run("/event", 60000)
 }
