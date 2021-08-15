@@ -1,4 +1,4 @@
-package whitedew
+package event
 
 import (
 	"reflect"

@@ -1,8 +1,9 @@
-package whitedew
+package server
 
 
 import (
 	"encoding/json"
+	"github.com/m1dsummer/whitedew/entity"
 	"regexp"
 	"strconv"
 )
@@ -20,18 +21,18 @@ func GetEventPostType(msg []byte) string {
 
 // ParseMsg
 // Convert row message to corresponding message type (GroupMessage and PrivateMessage)
-func ParseMsg(rowMsg []byte) Message {
+func ParseMsg(rowMsg []byte) entity.Message {
 	var m struct {
 		MsgType string `json:"message_type"`
 	}
 	_ = json.Unmarshal(rowMsg, &m)
 	msgType := m.MsgType
 	if msgType == "group" {
-		var t GroupMessage
+		var t entity.GroupMessage
 		_ = json.Unmarshal(rowMsg, &t)
 		return t
 	} else if msgType == "private" {
-		var t PrivateMessage
+		var t entity.PrivateMessage
 		_ = json.Unmarshal(rowMsg, &t)
 		return t
 	} else {
@@ -65,8 +66,8 @@ func fetchStr(pattern string, msgStr string) []string {
 	return []string{}
 }
 
-func AnalyzeMsg(msg Message) MessageInfo {
-	var tmp MessageInfo
+func AnalyzeMsg(msg entity.Message) entity.MessageInfo {
+	var tmp entity.MessageInfo
 	msgStr := msg.GetRowMessage()
 
 	id := fetchNumber("\\[CQ:at,qq=(\\d+)\\]", msgStr, 64)

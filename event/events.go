@@ -1,4 +1,4 @@
-package whitedew
+package event
 
 type Event interface {
 	GetNoticeType() string
@@ -25,13 +25,13 @@ func (m MetaEvent) GetSubType() string {
 	return m.SubType
 }
 
-type Handler func(agent *Agent, e Event)
+type Handler func(e Event)
 
-func (h Handler) Handle(agent *Agent, e Event) {
-	h(agent, e)
+func (h Handler) Handle(e Event) {
+	h(e)
 }
 
-type groupEvent struct {
+type GroupEvent struct {
 	MetaEvent
 	GroupId int64 `json:"group_id"`
 	UserId  int64 `json:"user_id"`
@@ -48,7 +48,7 @@ type _File struct {
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0
 type GroupUploadEvent struct {
-	groupEvent
+	GroupEvent
 	File _File `json:"file"`
 }
 
@@ -56,14 +56,14 @@ type GroupUploadEvent struct {
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE-1
 type GroupAdminEvent struct {
-	groupEvent
+	GroupEvent
 }
 
 // GroupDecreaseEvent
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E6%88%90%E5%91%98%E5%87%8F%E5%B0%91
 type GroupDecreaseEvent struct {
-	groupEvent
+	GroupEvent
 	OperatorId int64 `json:"operator_id"`
 }
 
@@ -71,7 +71,7 @@ type GroupDecreaseEvent struct {
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E6%88%90%E5%91%98%E5%A2%9E%E5%8A%A0
 type GroupIncreaseEvent struct {
-	groupEvent
+	GroupEvent
 	OperatorId int64 `json:"operator_id"`
 }
 
@@ -79,7 +79,7 @@ type GroupIncreaseEvent struct {
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E7%A6%81%E8%A8%80
 type GroupBanEvent struct {
-	groupEvent
+	GroupEvent
 	OperatorId int64 `json:"operator_id"`
 	Duration   int64 `json:"duration"`
 }
@@ -96,7 +96,7 @@ type FriendAddEvent struct {
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E6%B6%88%E6%81%AF%E6%92%A4%E5%9B%9E
 type GroupRecallEvent struct {
-	groupEvent
+	GroupEvent
 	OperatorId int64 `json:"operator_id"`
 	MessageId  int64 `json:"message_id"`
 }
@@ -113,7 +113,7 @@ type FriendRecallEvent struct {
 //
 // https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E5%86%85%E6%88%B3%E4%B8%80%E6%88%B3
 type PokeEvent struct {
-	groupEvent
+	GroupEvent
 	TargetId int64 `json:"target_id"`
 }
 
@@ -121,7 +121,7 @@ type PokeEvent struct {
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E7%BA%A2%E5%8C%85%E8%BF%90%E6%B0%94%E7%8E%8B
 type LuckyKingEvent struct {
-	groupEvent
+	GroupEvent
 	TargetId int64 `json:"target_id"`
 }
 
@@ -129,7 +129,7 @@ type LuckyKingEvent struct {
 //
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/notice.md#%E7%BE%A4%E6%88%90%E5%91%98%E8%8D%A3%E8%AA%89%E5%8F%98%E6%9B%B4
 type HonorEvent struct {
-	groupEvent
+	GroupEvent
 	HonorType string `json:"honor_type"`
 }
 

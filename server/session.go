@@ -1,19 +1,20 @@
-package whitedew
+package server
 
 import (
+	"github.com/m1dsummer/whitedew/api"
+	"github.com/m1dsummer/whitedew/entity"
 	"regexp"
 	"time"
 )
 
 type Session struct {
-	Manager    *SessionManager
-	Sender     Sender
-	StartTime  time.Time
-	Message    Message
-	Env        map[string]interface{}
+	Manager   *SessionManager
+	Sender    entity.Sender
+	StartTime time.Time
+	Message   entity.Message
+	Env       map[string]interface{}
 	IsFirstRun bool
 	Action     string
-	Agent      *Agent
 }
 
 func (s Session) Destroy() {
@@ -21,16 +22,16 @@ func (s Session) Destroy() {
 }
 
 func (s *Session) PostPrivateMessage(receiver int64, msg string, autoEscape ...bool) {
-	s.Agent.PostPrivateMessage(s.Sender.GetId(), msg)
+	api.PostPrivateMessage(s.Sender.GetId(), msg)
 }
 
 func (s *Session) PostGroupMessage(receiver int64, msg string, autoEscape ...bool) {
-	s.Agent.PostGroupMessage(receiver, msg)
+	api.PostGroupMessage(receiver, msg)
 }
 
 func (s Session) Get(arg string, prompt string) interface{} {
 	if prompt != "" {
-		s.Agent.PostGroupMessage(s.Sender.GetId(), prompt)
+		api.PostGroupMessage(s.Sender.GetId(), prompt)
 	}
 	return s.Env[arg]
 }
@@ -47,7 +48,7 @@ func (s SessionManager) Destroy(uid int64) {
 	delete(s.Pool, uid)
 }
 
-func (s SessionManager) NewSession(url string, accessToken string, msg Message) *Session {
+func (s SessionManager) NewSession(msg entity.Message) *Session {
 	oldSession := s.Get(msg.GetSender().GetId())
 	if oldSession != nil {
 		oldSession.IsFirstRun = false
@@ -59,7 +60,6 @@ func (s SessionManager) NewSession(url string, accessToken string, msg Message) 
 	session.Message = msg
 	session.IsFirstRun = true
 	session.Env = make(map[string]interface{})
-	session.Agent = NewAgent(url, accessToken)
 	session.Sender = msg.GetSender()
 	session.Action = ParseAction(msg.GetContent())
 

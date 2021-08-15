@@ -1,7 +1,7 @@
 // implement message type from OpenBot v11
 // Reference: https://github.com/botuniverse/onebot/blob/master/v11/specs/event/message.md
 
-package whitedew
+package entity
 
 // Message
 // General message type
