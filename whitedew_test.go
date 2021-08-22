@@ -16,7 +16,7 @@ func (p PluginPing) Init(w *WhiteDew) {
 }
 
 func Callback(session *server.Session) {
-	session.PostPrivateMessage(session.Sender.GetId(), "pong!")
+	api.PostPrivateMessage(session.Sender.GetId(), "pong!")
 }
 
 func PokeHandler(evt event.Event) {

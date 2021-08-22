@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/parnurzeal/gorequest"
+	"github.com/go-resty/resty/v2"
 	"log"
 )
 
@@ -42,15 +42,17 @@ func (a *Agent) PostMessage(action string, param map[string]interface{}, autoEsc
 	}
 	uri := fmt.Sprintf("%s/%s", a.URL, action)
 	data, _ := json.Marshal(param)
-	_, body, errs := gorequest.
-		New().
-		Post(uri).
-		Set("Content-Type", "application/json").
-		Set("Authorization", a.AccessToken).
-		Send(string(data)).
-		EndBytes()
-	if errs != nil {
-		log.Fatalln(errs)
+	client := resty.New()
+	headers := map[string]string{
+		"Content-Type": "application/json",
+		"Authorization": a.AccessToken,
 	}
-	return body
+	resp, err := client.R().
+		SetHeaders(headers).
+		SetBody(string(data)).
+		Post(uri)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return resp.Body()
 }
